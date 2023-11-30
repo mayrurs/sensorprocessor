@@ -15,6 +15,7 @@ class Sensordata:
     def __init__(self, sensor: str, rawdata: List[Rawdata] = []):
         self.sensor = sensor
         self.rawdata: List[Rawdata] = rawdata
+        self.events = []
 
     def __repr__(self) -> str:
         return f"Sensordata({self.sensor!r})"

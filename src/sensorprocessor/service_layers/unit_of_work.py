@@ -21,6 +21,11 @@ class AbstractUnitOfWork(abc.ABC):
     def commit(self):
         self._commit()
 
+    def collect_new_events(self):
+        for sensordata in self.sensordata.seen:
+            while sensordata.events:
+                yield sensordata.events.pop(0)
+
     @abc.abstractmethod
     def rollback():
         raise NotImplementedError
