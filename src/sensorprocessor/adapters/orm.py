@@ -8,6 +8,7 @@ from sqlalchemy import (
         Integer,
         DateTime,
         ForeignKey,
+        event
         )
 
 from sensorprocessor.domain import model
@@ -29,8 +30,17 @@ sensordata = Table(
         mapper_registry.metadata,
         Column("id", Integer, primary_key=True),
         Column("sensor", String),
-         Column("version_number", Integer, nullable=False, server_default="0"),
+        Column("version_number", Integer, nullable=False, server_default="0"),
          )
+
+current_data_view = Table(
+        "current_data_view",
+        mapper_registry.metadata,
+        Column("id", Integer, primary_key=True),
+        Column("sensor", String),
+        Column("value", Integer),
+        Column("timestamp", DateTime)
+        )
 
 def start_mappers():
     logger.info("Starting mappers")
@@ -44,6 +54,8 @@ def start_mappers():
             properties={"rawdata": relationship(mapper_rawdata)}
             )
             
-
+@event.listens_for(model.Sensordata, "load")
+def receive_load(sensordata, _):
+    sensordata.events = []
 
 

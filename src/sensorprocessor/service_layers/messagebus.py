@@ -55,5 +55,7 @@ COMMAND_HANDLERS = {
         }
 
 EVENT_HANDLERS = {
-        events.RawDataCreated: []
+        events.RawDataCreated: [
+                                handlers.add_newest_sensorvalue_to_read_model,
+                                handlers.clean_up_read_model]
         }

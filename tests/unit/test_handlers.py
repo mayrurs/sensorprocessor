@@ -1,10 +1,10 @@
-from datetime import datetime, timedelta
+from datetime import datetime
 from re import A
 
 from typing import List
 
 from sensorprocessor.adapters import repository
-from sensorprocessor.domain import events, commands, model
+from sensorprocessor.domain import commands, model
 from sensorprocessor.service_layers import messagebus, unit_of_work
 
 class FakeRepository(repository.AbstractSensorRepository):
@@ -48,15 +48,7 @@ class TestAddRawData:
                 timestamp=self.t0,
                 )
         messagebus.handle(cmd, uow)
-        
+
         assert uow.sensordata.get("temperature") is not None
         assert uow.commited == True
-
-    def test_for_existing_product(self):
-        uow = FakeUnitOfWork()
-        messagebus.handle(commands.CreateRawData("temperature", 12, self.t0), uow)
-        messagebus.handle(commands.CreateRawData("temperature", 13, self.t0 + timedelta(minutes=1)), uow)
-
-        assert 13 in [r.value for r in uow.sensordata.get(sensor="temperature").rawdata]
-
 

@@ -4,7 +4,7 @@ from sqlalchemy import text
 from sensorprocessor.service_layers import unit_of_work
 from sensorprocessor.domain import model
 
-from randomref import random_value
+from ..randomref import random_value
 
 t0 = datetime.now() 
 
@@ -48,5 +48,5 @@ def test_uow_can_add_sensordata(sqlite_session, sqlite_session_factory):
         uow.commit()
     
     rawdata_id = get_rawdata_id(sensor="temperature", session=sqlite_session)
-    breakpoint()
+    
     assert rawdata_id == 1

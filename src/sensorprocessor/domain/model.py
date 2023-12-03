@@ -3,6 +3,8 @@ from __future__ import annotations
 from datetime import datetime
 from dataclasses import dataclass
 
+from . import events
+
 from typing import List
 
 @dataclass
@@ -16,6 +18,14 @@ class Sensordata:
         self.sensor = sensor
         self.rawdata: List[Rawdata] = rawdata
         self.events = []
+
+    def add_raw_data(self, rawdata: Rawdata):
+        self.rawdata.append(rawdata)
+        self.events.append(
+                events.RawDataCreated(rawdata.sensor, 
+                                      rawdata.value,
+                                      rawdata.timestamp)
+                )
 
     def __repr__(self) -> str:
         return f"Sensordata({self.sensor!r})"

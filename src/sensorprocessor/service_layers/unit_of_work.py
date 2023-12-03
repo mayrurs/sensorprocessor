@@ -2,7 +2,9 @@ from __future__ import annotations
 
 import abc
 
-from sqlalchemy import create_engine
+from typing import Dict
+
+from sqlalchemy import create_engine, text
 from sqlalchemy.orm import sessionmaker
 
 from sensorprocessor import config
@@ -59,6 +61,10 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
 
     def rollback(self):
         self.session.rollback
+
+    def execute(self, query:str, param: Dict):
+        return self.session.execute(text(query), param)
+
 
 
     
