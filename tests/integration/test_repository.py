@@ -27,5 +27,5 @@ def test_repository_can_add_sensordata(sqlite_session):
         "SELECT * FROM rawdata"
         )).all()
 
-    assert result_sensordata == [(1, "temperature", 0)]
-    assert result_rawdata == [("1", "temperature", 12, t0.strftime(r'%Y-%m-%d %H:%M:%S'))]
+    assert result_sensordata == [("temperature", 0)]
+    assert result_rawdata == [(1, "temperature", 12, t0.strftime(r'%Y-%m-%d %H:%M:%S.%f'))]

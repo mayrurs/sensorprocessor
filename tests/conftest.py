@@ -2,6 +2,7 @@ import pytest
 import time
 import requests
 import redis
+import shutil
 
 from pathlib import Path
 

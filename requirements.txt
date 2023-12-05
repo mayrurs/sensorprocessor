@@ -10,3 +10,5 @@ pytest
 mypy
 requests
 numpy 
+# ipdb
+ipython

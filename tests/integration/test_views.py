@@ -1,6 +1,8 @@
+from sqlalchemy import text
+
 from datetime import datetime, timedelta
 from sensorprocessor import views
-from sensorprocessor.domain import commands
+from sensorprocessor.domain import commands, model
 from sensorprocessor.service_layers import unit_of_work, messagebus
 
 t0 = datetime.now()
@@ -16,6 +18,7 @@ def test_current_value_view(sqlite_session_factory):
     messagebus.handle(newest, uow)
     messagebus.handle(other, uow)
 
-    assert views.get_current_value("temperature", uow) == newest.value
+    assert len(uow.session.execute(text("SELECT * FROM current_data_view")).all()) == 2
+    assert views.get_current_value("temperature", uow) == {"sensor": "temperature", "value": newest.value}
     
 

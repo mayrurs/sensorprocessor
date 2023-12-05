@@ -16,6 +16,13 @@ from sensorprocessor.domain import model
 logger = logging.getLogger(__name__)
 mapper_registry = registry()
 
+sensordata = Table(
+        "sensordata", 
+        mapper_registry.metadata,
+        Column("sensor", String, primary_key=True),
+        Column("version_number", Integer, nullable=False, server_default="0"),
+         )
+
 rawdata = Table(
         "rawdata",
         mapper_registry.metadata,
@@ -24,14 +31,6 @@ rawdata = Table(
         Column("value", Integer),
         Column("timestamp", DateTime)
         )
-
-sensordata = Table(
-        "sensordata", 
-        mapper_registry.metadata,
-        Column("id", Integer, primary_key=True),
-        Column("sensor", String),
-        Column("version_number", Integer, nullable=False, server_default="0"),
-         )
 
 current_data_view = Table(
         "current_data_view",
