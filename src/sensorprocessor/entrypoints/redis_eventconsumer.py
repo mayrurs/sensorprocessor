@@ -1,15 +1,16 @@
 import json
 import redis
+import logging
 
-import logger
+from datetime import datetime
 
 from sensorprocessor import config
 from sensorprocessor.adapters import orm
 from sensorprocessor.domain import commands
-from sensorprocessor.service_layer import messagebus, unit_of_work
+from sensorprocessor.service_layers import messagebus, unit_of_work
 
-r = redis.Redis(config.get_redis_host_and_port())
-logging = logger.getLogger(__main__)
+r = redis.Redis(**config.get_redis_host_and_port())
+logger = logging.getLogger(__name__)
 
 def main():
     orm.start_mappers()
@@ -20,12 +21,12 @@ def main():
         handle_create_rawdata(m)
 
 def handle_create_rawdata(m):
-    logging.debug(f"Handling {m}")
+    logger.debug(f"Handling {m}")
     data = json.loads(m["data"])
     cmd = commands.CreateRawData(data["sensor"], 
                                  data["value"],
-                                 datetime.strptime(date["timestamp"], '%y-%m-%d %H:%M:%S')
+                                 datetime.strptime(data["timestamp"], '%y-%m-%d %H:%M:%S')
                                  )
-    messagebus.handle(cmd, uow=unit_of_work.SqlAlchemyUnitOfWork)
+    messagebus.handle(cmd, uow=unit_of_work.SqlAlchemyUnitOfWork())
 
 

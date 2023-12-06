@@ -26,7 +26,7 @@ e2e-test: up
 	docker-compose run --rm --no-deps --entrypoint="pytest -v" api /tests/e2e
 
 logs:
-	docker-compose logs --tail=25 api
+	docker-compose logs --tail=25 api redis_pubsub
 
 black:
 	black -l 86 $$(find * -name '*.py')
