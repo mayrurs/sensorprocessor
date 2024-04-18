@@ -1,6 +1,5 @@
 import os
 
-
 def get_postgres_uri():
     host = os.environ.get("DB_HOST", "localhost")
     port = 54321 if host == "localhost" else 5432

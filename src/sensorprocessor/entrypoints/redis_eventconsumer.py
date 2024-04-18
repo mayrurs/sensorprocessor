@@ -18,15 +18,20 @@ def main():
     pubsub.subscribe("sensor_stream")
 
     for m in pubsub.listen():
+        logger.debug(f"Handling event {m}")
         handle_create_rawdata(m)
 
 def handle_create_rawdata(m):
     logger.debug(f"Handling {m}")
     data = json.loads(m["data"])
+    breakpoint()
     cmd = commands.CreateRawData(data["sensor"], 
                                  data["value"],
-                                 datetime.strptime(data["timestamp"], '%y-%m-%d %H:%M:%S')
+                                 datetime.strptime(data["timestamp"], '%Y-%m-%d %H:%M:%S')
                                  )
     messagebus.handle(cmd, uow=unit_of_work.SqlAlchemyUnitOfWork())
+
+if __name__ == "__main__":
+    main()
 
 
