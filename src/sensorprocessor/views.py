@@ -9,6 +9,13 @@ def get_current_value(sensor: str, uow: unit_of_work.SqlAlchemyUnitOfWork):
             ), {"sensor": sensor})
         return [dict(r) for r in results.mappings()][0]
 
+def sensordata(sensor, uow: unit_of_work.SqlAlchemyUnitOfWork):
+    with uow:
+        results = uow.session.execute(text(
+            "SELECT * FROM rawdata WHERE sensor = :sensor"), {"sensor": sensor})
+        return [dict(r) for r in results.mappings()]
+
+
 
 
 

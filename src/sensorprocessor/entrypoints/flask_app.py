@@ -11,6 +11,16 @@ app = Flask(__name__)
 
 orm.start_mappers()
 
+@app.route("/")
+def healthcheck():
+    return "Sensorprocessor API is working fine"
+
+@app.route("/sensordata/<sensor>", methods=["GET"])
+def sensordata(sensor):
+    uow = unit_of_work.SqlAlchemyUnitOfWork()
+    result = views.sensordata(sensor, uow)
+    return jsonify(result, 200)
+
 @app.route("/add_rawdata/", methods=["POST"])
 def add_rawdata():
     uow = unit_of_work.SqlAlchemyUnitOfWork()
