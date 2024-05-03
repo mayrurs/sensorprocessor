@@ -70,10 +70,11 @@ def postgres_db():
     return engine
 
 
-@pytest.fixture
+@pytest.fixture()
 def postgres_session_factory(postgres_db):
     start_mappers()
     yield sessionmaker(bind=postgres_db)
+    # mapper_registry.metadata.drop_all(postgres_db) 
     clear_mappers()
 
 

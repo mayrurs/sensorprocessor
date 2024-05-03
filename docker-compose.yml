@@ -21,8 +21,6 @@ services:
     entrypoint:
       - python
       - /src/sensorprocessor/entrypoints/redis_eventconsumer.py
-    networks:
-      - sensor-network
 
   api:
     image: sensorprocessor-image
@@ -47,26 +45,17 @@ services:
       - --port=80
     ports:
       - "5005:80"
-    networks:
-      - sensor-network
-
 
   postgres:
     image: postgres:9.6
     environment:
-      - POSTGRES_USER=allocation
+      - POSTGRES_USER=service
       - POSTGRES_PASSWORD=abc123
     ports:
       - "54321:5432"
-    networks:
-      - sensor-network
 
   redis:
     image: redis:alpine
     ports:
       - "63791:6379"
-    networks:
-      - sensor-network
 
-networks:
-  sensor-network:

@@ -42,6 +42,7 @@ def handle_event(
         uow: unit_of_work.AbstractUnitOfWork
         ):
     for handler in EVENT_HANDLERS[type(event)]:
+        logger.debug(f"Handling event {event}")
         try:
             handler(event, uow)
             queue.extend(uow.collect_new_events())
@@ -56,6 +57,6 @@ COMMAND_HANDLERS = {
 
 EVENT_HANDLERS = {
         events.RawDataCreated: [
-                                handlers.add_newest_sensorvalue_to_read_model,
-                                handlers.clean_up_read_model]
+                                handlers.add_newest_sensorvalue_to_read_model
+                                ]
         }

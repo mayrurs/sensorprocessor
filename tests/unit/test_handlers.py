@@ -39,7 +39,7 @@ class TestAddRawData:
     t0 = datetime.now()
 
     @pytest.mark.skip
-    def test_for_new_product(self):
+    def test_for_new_sensordata(self):
         uow = FakeUnitOfWork()
         cmd = commands.CreateRawData(
                 sensor="temperature",

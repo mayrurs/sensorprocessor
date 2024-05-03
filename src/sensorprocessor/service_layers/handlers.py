@@ -30,13 +30,17 @@ def add_newest_sensorvalue_to_read_model(
         uow: unit_of_work.SqlAlchemyUnitOfWork,
         ):
     with uow:
-        uow.session.execute(text(
-            "INSERT INTO current_data_view (sensor, value, timestamp) VALUES (:sensor, :value, :timestamp)"),
-                            {"sensor": event.sensor, "value": event.value, 
+        uow.session.execute(text('''
+            INSERT INTO current_data_view (sensor, value, timestamp) 
+            VALUES (:sensor, :value, :timestamp)        
+            ON CONFLICT (sensor) DO UPDATE 
+            SET value = :value, timestamp = :timestamp;'''),
+            {"sensor": event.sensor, "value": event.value, 
                              "timestamp": event.timestamp},
                             )
         uow.commit()
 
+# ToDo: Can be removed
 def clean_up_read_model(
         event: events.Event,
         uow: unit_of_work.SqlAlchemyUnitOfWork,

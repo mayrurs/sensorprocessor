@@ -11,9 +11,10 @@ app = Flask(__name__)
 
 orm.start_mappers()
 
-@app.route("/")
+@app.route("/healthcheck")
 def healthcheck():
     return "Sensorprocessor API is working fine"
+
 
 @app.route("/sensordata/<sensor>", methods=["GET"])
 def sensordata(sensor):

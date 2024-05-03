@@ -13,6 +13,7 @@ r = redis.Redis(**config.get_redis_host_and_port())
 logger = logging.getLogger(__name__)
 
 def main():
+    logger.info('Starting Pubsub service')
     orm.start_mappers()
     pubsub = r.pubsub(ignore_subscribe_messages=True)
     pubsub.subscribe("sensor_stream")
@@ -23,8 +24,8 @@ def main():
 
 def handle_create_rawdata(m):
     logger.debug(f"Handling {m}")
+    print("Redis handler is handling an event")
     data = json.loads(m["data"])
-    breakpoint()
     cmd = commands.CreateRawData(data["sensor"], 
                                  data["value"],
                                  datetime.strptime(data["timestamp"], '%Y-%m-%d %H:%M:%S')

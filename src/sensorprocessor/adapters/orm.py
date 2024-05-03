@@ -8,6 +8,7 @@ from sqlalchemy import (
         Integer,
         DateTime,
         ForeignKey,
+        UniqueConstraint,
         event
         )
 
@@ -35,10 +36,10 @@ rawdata = Table(
 current_data_view = Table(
         "current_data_view",
         mapper_registry.metadata,
-        Column("id", Integer, primary_key=True),
-        Column("sensor", String),
+        Column("id", Integer),
+        Column("sensor", String, primary_key=True),
         Column("value", Integer),
-        Column("timestamp", DateTime)
+        Column("timestamp", DateTime), 
         )
 
 def start_mappers():
