@@ -21,6 +21,18 @@ Check availability of DEV redis instance
 
 
 
+# Alembic 
 
+To generate database schema from the domain model. This requires that alembic has been initalised `alembic init migrations` and the necessary configurations are set in the env.py as well as the alembic.ini file. 
 
+## Install the package in env
+`source venv/bin/activate`
+`pip install -e ./src/`
 
+## Create migration skripts 
+The required $ENV variables as configured in env.py need to be available in the current environment. 
+
+`alembic revision --autogenerate -m "Initial"`
+
+Connect to the database and migrate to the latest version file
+`alembic upgrade head`

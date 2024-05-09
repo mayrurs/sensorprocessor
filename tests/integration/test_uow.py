@@ -4,7 +4,7 @@ from sqlalchemy import text
 from sensorprocessor.service_layers import unit_of_work
 from sensorprocessor.domain import model
 
-from ..randomref import random_value
+from ..helpers import random_value
 
 t0 = datetime.now() 
 
