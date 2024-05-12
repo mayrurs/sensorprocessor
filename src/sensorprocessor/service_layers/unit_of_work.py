@@ -10,6 +10,7 @@ from sqlalchemy.orm import sessionmaker
 from sensorprocessor import config
 from sensorprocessor.adapters import repository
 
+
 class AbstractUnitOfWork(abc.ABC):
 
     sensordata: repository.AbstractSensorRepository
@@ -37,10 +38,10 @@ class AbstractUnitOfWork(abc.ABC):
         raise NotImplementedError
 
 
-DEFAULT_SESSION_FACTORY=sessionmaker(
-        bind=create_engine(config.get_postgres_uri(), 
-                           isolation_level="REPEATABLE READ")
-        )
+DEFAULT_SESSION_FACTORY = sessionmaker(
+    bind=create_engine(config.get_postgres_uri(), isolation_level="REPEATABLE READ")
+)
+
 
 class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
 
@@ -55,16 +56,12 @@ class SqlAlchemyUnitOfWork(AbstractUnitOfWork):
     def __exit__(self, *args):
         super().__exit__(*args)
         self.session.close()
-    
+
     def _commit(self):
         self.session.commit()
 
     def rollback(self):
         self.session.rollback
 
-    def execute(self, query:str, param: Dict):
+    def execute(self, query: str, param: Dict):
         return self.session.execute(text(query), param)
-
-
-
-    

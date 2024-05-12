@@ -6,6 +6,7 @@ from datetime import datetime
 class Command(abc.ABC):
     pass
 
+
 @dataclass
 class CreateRawData(Command):
     sensor: str

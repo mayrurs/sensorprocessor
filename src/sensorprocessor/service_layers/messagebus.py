@@ -9,6 +9,7 @@ logger = logging.getLogger(__name__)
 
 Message = Union[commands.Command, events.Event]
 
+
 def handle(message: Message, uow: unit_of_work.AbstractUnitOfWork):
     queue = [message]
     while queue:
@@ -22,25 +23,21 @@ def handle(message: Message, uow: unit_of_work.AbstractUnitOfWork):
 
 
 def handle_command(
-        cmd: commands.Command, 
-        queue: List[Message], 
-        uow: unit_of_work.AbstractUnitOfWork
-        ):
+    cmd: commands.Command, queue: List[Message], uow: unit_of_work.AbstractUnitOfWork
+):
     logger.debug(f"Handling command {cmd}")
     try:
-        handler = COMMAND_HANDLERS[type(cmd)] 
+        handler = COMMAND_HANDLERS[type(cmd)]
         handler(cmd, uow)
         queue.extend(uow.collect_new_events())
     except Exception:
         logger.debug(f"Exception handling command {cmd}")
-        raise 
+        raise
 
 
 def handle_event(
-        event: events.Event, 
-        queue: List[Message],
-        uow: unit_of_work.AbstractUnitOfWork
-        ):
+    event: events.Event, queue: List[Message], uow: unit_of_work.AbstractUnitOfWork
+):
     for handler in EVENT_HANDLERS[type(event)]:
         logger.debug(f"Handling event {event}")
         try:
@@ -51,12 +48,8 @@ def handle_event(
             continue
 
 
-COMMAND_HANDLERS = {
-        commands.CreateRawData: handlers.create_rawdata
-        }
+COMMAND_HANDLERS = {commands.CreateRawData: handlers.create_rawdata}
 
 EVENT_HANDLERS = {
-        events.RawDataCreated: [
-                                handlers.add_newest_sensorvalue_to_read_model
-                                ]
-        }
+    events.RawDataCreated: [handlers.add_newest_sensorvalue_to_read_model]
+}

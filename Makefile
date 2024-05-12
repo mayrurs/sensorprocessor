@@ -29,4 +29,4 @@ logs:
 	docker compose -f docker-compose.dev.yml logs --tail=25 api redis_pubsub
 
 black:
-	black -l 86 $$(find * -name '*.py')
+	black -l 86 $$(find . -name '*.py' -not -path './venv/*') 

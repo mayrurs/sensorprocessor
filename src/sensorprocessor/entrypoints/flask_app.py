@@ -11,6 +11,7 @@ app = Flask(__name__)
 
 orm.start_mappers()
 
+
 @app.route("/healthcheck")
 def healthcheck():
     return "Sensorprocessor API is working fine"
@@ -22,17 +23,19 @@ def sensordata(sensor):
     result = views.sensordata(sensor, uow)
     return jsonify(result, 200)
 
+
 @app.route("/add_rawdata/", methods=["POST"])
 def add_rawdata():
     uow = unit_of_work.SqlAlchemyUnitOfWork()
-    time_format =  '%Y-%m-%d %H:%M:%S'
+    time_format = "%Y-%m-%d %H:%M:%S"
     cmd = commands.CreateRawData(
-            request.json["sensor"],
-            request.json["value"],
-            datetime.strptime(request.json["timestamp"], time_format)
-            )
+        request.json["sensor"],
+        request.json["value"],
+        datetime.strptime(request.json["timestamp"], time_format),
+    )
     messagebus.handle(cmd, uow)
     return "OK", 201
+
 
 @app.route("/get_current_value/<sensor>", methods=["GET"])
 def get_current_value(sensor):
@@ -42,6 +45,3 @@ def get_current_value(sensor):
     if not result:
         return "not found", 404
     return jsonify(result), 200
-
-
-

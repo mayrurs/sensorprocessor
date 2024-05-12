@@ -5,6 +5,7 @@ from sensorprocessor import config
 
 r = redis.Redis(**config.get_redis_host_and_port())
 
+
 def subscribe_to(channel):
     pubsub = r.pubsub()
     pubsub.subscribe(channel)

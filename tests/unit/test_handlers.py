@@ -1,4 +1,4 @@
-import pytest 
+import pytest
 
 from datetime import datetime
 from re import A
@@ -9,9 +9,10 @@ from sensorprocessor.adapters import repository
 from sensorprocessor.domain import commands, model
 from sensorprocessor.service_layers import messagebus, unit_of_work
 
+
 class FakeRepository(repository.AbstractSensorRepository):
 
-    def __init__(self, sensordata: List =[]):
+    def __init__(self, sensordata: List = []):
         super().__init__()
         self._sensordata = sensordata
 
@@ -34,6 +35,7 @@ class FakeUnitOfWork(unit_of_work.AbstractUnitOfWork):
     def rollback(self):
         pass
 
+
 class TestAddRawData:
 
     t0 = datetime.now()
@@ -42,12 +44,11 @@ class TestAddRawData:
     def test_for_new_sensordata(self):
         uow = FakeUnitOfWork()
         cmd = commands.CreateRawData(
-                sensor="temperature",
-                value=12, 
-                timestamp=self.t0,
-                )
+            sensor="temperature",
+            value=12,
+            timestamp=self.t0,
+        )
         messagebus.handle(cmd, uow)
 
         assert uow.sensordata.get("temperature") is not None
         assert uow.commited == True
-

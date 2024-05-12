@@ -5,9 +5,10 @@ from sqlalchemy import select
 
 from sensorprocessor.domain import model
 
+
 class AbstractSensorRepository(abc.ABC):
 
-    def __init__(self): 
+    def __init__(self):
         self.seen: Set[model.Sensordata] = set()
 
     def get(self, sensor: str) -> model.Sensordata:
@@ -28,6 +29,7 @@ class AbstractSensorRepository(abc.ABC):
     def _add(self, sensordata: model.Sensordata):
         raise NotImplementedError
 
+
 class SqlAlchemySensorRepository(AbstractSensorRepository):
 
     def __init__(self, session):
@@ -35,11 +37,14 @@ class SqlAlchemySensorRepository(AbstractSensorRepository):
         super().__init__()
 
     def _get(self, sensor: str):
-        sensordata = self.session.execute(
+        sensordata = (
+            self.session.execute(
                 select(model.Sensordata).where(model.Sensordata.sensor == sensor)
-                ).scalars().first()
+            )
+            .scalars()
+            .first()
+        )
         return sensordata
 
     def _add(self, sensordata):
         self.session.add(sensordata)
-
