@@ -1,5 +1,4 @@
-import numpy as np
+from datetime import datetime
 
-
-def random_value():
-    return np.random.randint(-20, 30)
+def datetime_to_str(datetime: datetime) -> str:
+    return datetime.strftime(r"%Y-%m-%d %H:%M:%S")

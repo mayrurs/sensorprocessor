@@ -6,16 +6,12 @@ from sensorprocessor import views
 from sensorprocessor.domain import commands, model
 from sensorprocessor.service_layers import unit_of_work, messagebus
 
-
-def datetime_to_str(datetime: datetime) -> str:
-    return datetime.strftime(r"%Y-%m-%d %H:%M:%S")
-
+from ..helpers import datetime_to_str
 
 t0 = datetime.now()
 t0_str = datetime_to_str(t0)
 t1_str = datetime_to_str(t0 + timedelta(minutes=1))
 t2_str = datetime_to_str(t0 + timedelta(minutes=2))
-
 
 @pytest.mark.usefixtures(
     "postgres_db"

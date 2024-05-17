@@ -4,8 +4,6 @@ from sqlalchemy import text
 from sensorprocessor.service_layers import unit_of_work
 from sensorprocessor.domain import model
 
-from ..helpers import random_value
-
 t0 = datetime.now()
 
 
@@ -37,9 +35,8 @@ def get_rawdata_id(sensor, session):
 
 def test_uow_can_retrieve_sensordata(sqlite_session, sqlite_session_factory):
 
-    value0 = random_value()
     insert_rawdata(
-        sensor="temperature", value=value0, timestamp=t0, session=sqlite_session
+        sensor="temperature", value=23, timestamp=t0, session=sqlite_session
     )
     uow = unit_of_work.SqlAlchemyUnitOfWork(sqlite_session_factory)
 
@@ -47,12 +44,12 @@ def test_uow_can_retrieve_sensordata(sqlite_session, sqlite_session_factory):
         sensordata = uow.sensordata.get("temperature")
 
         assert sensordata.sensor == "temperature"
-        assert sensordata.rawdata == [model.Rawdata("temperature", value0, t0)]
+        assert sensordata.rawdata == [model.Rawdata("temperature", 23, t0)]
 
 
 def test_uow_can_add_sensordata(sqlite_session, sqlite_session_factory):
     sensordata = model.Sensordata(
-        "temperature", [model.Rawdata("temperature", random_value(), t0)]
+        "temperature", [model.Rawdata("temperature", 15, t0)]
     )
 
     uow = unit_of_work.SqlAlchemyUnitOfWork(sqlite_session_factory)
