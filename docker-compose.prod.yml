@@ -1,12 +1,15 @@
 version: "3"
 services:
   redis_pubsub:
-    image: sensorhub:v0.1.0
-    environment:
-      - DB_HOST=postgres-prod
-      - DB_PASSWORD=${DB_PASSWORD}
-      - REDIS_HOST=${REDIS_HOST}
-      - PYTHONDONTWRITEBYTECODE=1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sensorhub
+    depends_on:
+      - redis
+      - postgres
+    env_file:
+      - ./.env.prod
     entrypoint:
       - python
       - /src/sensorprocessor/entrypoints/redis_eventconsumer.py
@@ -14,25 +17,51 @@ services:
       - sensorhub
 
   api:
-    image: sensorhub:v0.1.0
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - API_HOST=${API_HOST}
-      - REDIS_HOST=${REDIS_HOST}
-      - PYTHONDONTWRITEBYTECODE=1
-      - FLASK_APP=sensorprocessor/entrypoints/flask_app.py
-      - PYTHONUNBUFFERED=1
+    image: sensorhub
+    depends_on:
+      - redis_pubsub
+      - postgres
+    env_file:
+      - ./.env.prod
     entrypoint:
-      - flask
-      - run
-      - --host=0.0.0.0
-      - --port=80
-    ports:
-      - "5005:80"
+      - gunicorn
+      - --workers=4
+      - --bind=0.0.0.0:5000
+      - sensorprocessor.entrypoints.flask_app:app
+    expose:
+      - 5000
     networks:
       - sensorhub
 
+  postgres:
+    image: postgres:16.2
+    env_file:
+      - ./.env.prod
+    ports:
+      1433:1433
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data/
+    networks:
+      - sensorhub
+
+  redis:
+    image: redis:alpine
+    ports:
+     - 6379:6379
+    networks:
+     - sensorhub
+
+  nginx:
+    build: ./nginx
+    ports:
+     - 1337:80
+    depends_on:
+     - api
+    networks:
+     - sensorhub
+
+volumes:
+  postgres_data_prod:
+
 networks:
   sensorhub:
-    external: true

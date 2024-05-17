@@ -5,6 +5,7 @@ psycopg2-binary
 redis
 tenacity
 alembic
+gunicorn
 
 # tests
 pytest
